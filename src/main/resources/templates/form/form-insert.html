@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Thymeleaf Form Insert User</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
+
+
+</head>
+<body ng-app="mainApp">
+
+    <form  ng-controller="formController"  th:object="${user}">
+        <table>
+            <tr>
+                <td>Nama</td>
+                <td><input type="text" th:field="*{nama}" ng-model="nama" /></td>
+                <td id="err-nama"></td>
+            </tr>
+            <tr>
+                <td>Alamat</td>
+                <td><input type="text" th:field="*{alamat}" ng-model="alamat"/></td>
+                <td id="err-alamat"></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <input type="submit" value="Submit User" style="width: 100%;" ng-click="trySave()"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <input type="submit" value="Lihat List Data" style="width:100%;" ng-click="goList()"/>
+                </td>
+            </tr>
+        </table>
+        <div id="ajax-response"></div>
+    </form>
+
+
+
+
+    <div id="tes-post"></div>
+
+</body>
+
+
+    <script>
+
+
+
+        var app = angular.module('mainApp',[]);
+
+
+
+
+
+        app.controller('formController',function($scope,$http){
+
+            $scope.goList = function (){
+                window.location.href = "/arief/user/list";
+            };
+
+            $scope.trySave = function (){
+                if($scope.nama === ''
+                    || $scope.nama === undefined
+                    || $scope.alamat === undefined
+                    || $scope.alamat === ''){
+
+                  if($scope.nama === '' || $scope.nama === undefined){
+                    document.getElementById('err-nama').innerHTML = "Field nama masih kosong";
+                  }else{
+                    document.getElementById('err-nama').innerHTML = "";
+                  }
+
+                  if($scope.alamat  === '' || $scope.alamat === undefined){
+                      document.getElementById('err-alamat').innerHTML = "Field alamat masih kosong";
+                  }else{
+                      document.getElementById('err-alamat').innerHTML = "";
+                  }
+
+                  document.getElementById('ajax-response').innerHTML = "";
+
+                }else{
+
+
+
+                  $http({
+                    method:"POST",
+                    url:"http://localhost:8989/arief/api/user",
+                    data:{
+                        nama:$scope.nama,
+                        alamat:$scope.alamat
+                    }
+                  }).then(function ok (response){
+                     document.getElementById('ajax-response').innerHTML = response.data;
+                     console.log(response);
+                  },function error(response){
+                     console.log(response);
+                  });
+                }
+
+            };
+        });
+
+
+    </script>
+</html>

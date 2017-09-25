@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List User</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+</head>
+<body ng-app="listApp">
+    <h4>List User Page</h4>
+
+    <table border="2" ng-controller="listController">
+        <tr>
+            <td>Id</td>
+            <td>Nama</td>
+            <td>Alamat</td>
+            <td>Delete</td>
+            <td>Update</td>
+        </tr>
+
+        <tr ng-repeat="j in json">
+            <td>{{j.id}}</td>
+            <td>{{j.nama}}</td>
+            <td>{{j.alamat}}</td>
+            <td><a  th:href="@{'/api/user/' +'{{j.id}}' }">Delete</a></td>
+            <td><a  th:href="@{'/user/update/' +'{{j.id}}'}">Update</a></td>
+        </tr>
+    </table>
+
+
+    <a th:href="@{/user/save}">Form Insert User</a><br/>
+    <a th:href="@{/home}">Home Page</a>
+</body>
+    <script>
+        var app = angular.module('listApp',[]);
+
+        app.controller('listController',function($scope,$http){
+
+           $http({
+              method:"GET",
+              url:"http://localhost:8989/arief/api/user"
+           }).then(function ok (response){
+              $scope.json = response.data;
+
+
+              console.log(response.data);
+           },function error(response){
+              console.log(response);
+           });
+
+        });
+
+
+    </script>
+</html>

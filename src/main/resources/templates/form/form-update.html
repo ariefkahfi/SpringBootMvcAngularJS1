@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Form Update</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
+</head>
+<body ng-app="updateApp">
+        <form ng-controller="update" th:object="${user}" >
+            <table>
+                <tr>
+                    <td><input type="number"  th:field="*{id}" /></td>
+                </tr>
+                <tr>
+                    <td>Nama</td>
+                    <td><input type="text"  th:field="*{nama}"   /></td>
+                </tr>
+                <tr>
+                    <td>Alamat</td>
+                    <td><input type="text" th:field="*{alamat}" /></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" value="Update Data User" ng-click="doUpdate()"/></td>
+                </tr>
+            </table>
+            <div id="ajax-response"></div>
+        </form>
+
+</body>
+    <script>
+        var app = angular.module('updateApp',[]);
+
+        app.controller('update',function($scope,$http){
+
+            var id = document.getElementById('id').value;
+            var nama  = document.getElementById('nama').value;
+            var alamat = document.getElementById('alamat').value;
+
+
+            console.log('Id di var : ' + id);
+            console.log('nama di var : ' + nama);
+            console.log('alamat di var : ' + alamat);
+
+            $scope.id = id;
+            $scope.nama = nama;
+            $scope.alamat = alamat;
+
+            //console.log('scopeId di var : ' + $scope.id);
+            //console.log('ScopeNama di var : ' + $scope.nama);
+            //console.log('ScopeAlamat di var : ' + $scope.alamat);
+
+
+            $scope.doUpdate = function () {
+                if($scope.nama === '' || $scope.nama === undefined || $scope.alamat === '' || $scope.alamat === undefined){
+                    alert('Form masih kosong');
+                }else{
+                  console.log($scope.id+"\n"+$scope.nama+"\n"+$scope.alamat);
+                  $http({
+                     method:"POST",
+                     url:"http://localhost:8989/arief/api/user-u",
+                     data:
+
+
+                     {
+
+                         id:document.getElementById('id').value,
+                         nama:document.getElementById('nama').value,
+                         alamat:document.getElementById('alamat').value
+
+                     }
+                  }).
+                  then(function ok(response){
+                    console.log(response);
+                    document.getElementById('ajax-response').innerHTML = response.data;
+                  },function error(response){
+                    console.log(response);
+                  });
+
+                }
+            };
+        });
+
+    </script>
+</html>
